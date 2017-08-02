@@ -61,22 +61,22 @@
 <script src="js/bootstrap.min.js"></script>
 <script>
     $(function () {
-        GetPostsData();
-        $("#ShowCreateFormButton").click(function(){
+
+        $("#ShowCreateFormButton").click(function () {
             $("#CreateForm").show()
         })
-        $("#HideCreateFormButton").click(function(){
+        $("#HideCreateFormButton").click(function () {
             $("#CreateForm").hide()
         })
-        $("#CreateData").click(function(){
-            var CreateDataJson={
-                title:$("#title").val(),
-                author:$("#author").val(),
-                phone:$("#phone").val(),
-                mobilephone:$("#mobilephone").val(),
-                address:$("#address").val(),
+        $("#CreateData").click(function () {
+            var CreateDataJson = {
+                title: $("#title").val(),
+                author: $("#author").val(),
+                phone: $("#phone").val(),
+                mobilephone: $("#mobilephone").val(),
+                address: $("#address").val(),
             }
-           $.ajax({
+            $.ajax({
                 //web api網址
                 url: "http://localhost:3000/posts",
                 //Web Request類型
@@ -86,7 +86,7 @@
                 //回傳資料型別
                 datatype: 'json',
                 //回傳給web api的資料
-                data:JSON.stringify(CreateDataJson) ,
+                data: JSON.stringify(CreateDataJson),
                 //當ajax發生錯誤會觸發此程式
                 error: function (xhr) {
                     console.log(xhr);
@@ -95,8 +95,11 @@
                 success: function (result) {
                     GetPostsData()
                 },
-            }); 
+            });
         })
+
+        GetPostsData();
+
         function GetPostsData() {
             $.ajax({
                 //web api網址
@@ -130,6 +133,15 @@
                             "<td>" + o.mobilephone + "</td>" +
                             "<td>" + o.address + "</td>" +
                             "</tr>")
+                    })
+                    $(".Edit").click(function () {
+                        console.log($(this).parents()[1].id)
+                    })
+                    $(".Delete").click(function () {
+                        console.log($(this).parents()[1].id)
+                    })
+                    $(".Detail").click(function () {
+                        console.log($(this).parents()[1].id)
                     })
 
                     console.log(result);
