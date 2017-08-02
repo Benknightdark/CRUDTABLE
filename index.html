@@ -11,9 +11,7 @@
         <div class="form-group">
             <button class="btn btn-default" type="button" id="ShowCreateFormButton">打開新增資料頁面</button>
         </div>
-        <div class="form-group">
-            <button class="btn btn-default" type="button" id="HideCreateFormButton">隱藏新增資料頁面</button>
-        </div>
+
         <form id="CreateForm" hidden>
             <div class="form-group">
                 <label for="title">title</label>
@@ -35,7 +33,11 @@
                 <label for="address">address</label>
                 <input type="text" class="form-control" id="address" placeholder="address">
             </div>
-            <button type="button" class="btn btn-default" id="CreateData">新增資料</button>
+            <div class="form-group">
+                <button type="button" class="btn btn-default" id="CreateData">新增資料</button>
+                <button class="btn btn-default" type="button" id="HideCreateFormButton">取消</button>
+            </div>
+         
         </form>
         <div class="table-responsive">
             <table class="table table-bordered">
@@ -128,7 +130,7 @@
                             "<button class='btn btn-info Detail' type='button'>Detail</button>" +
                             "</td>" +
                             "<td>" + o.title + "</td>" +
-                            "<td>" + o.autor + "</td>" +
+                            "<td>" + o.author + "</td>" +
                             "<td>" + o.phone + "</td>" +
                             "<td>" + o.mobilephone + "</td>" +
                             "<td>" + o.address + "</td>" +
