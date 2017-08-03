@@ -8,11 +8,13 @@
 
 <body>
     <div class="container">
+        <!--打開新增資料頁面按鈕-->
         <div class="form-group">
             <button class="btn btn-default" type="button" id="ShowCreateFormButton">打開新增資料頁面</button>
         </div>
-
+        <!--新增資料表單-->
         <form id="CreateForm" hidden>
+            <h2>新增資料表單</h2>
             <div class="form-group">
                 <label for="title">title</label>
                 <input type="text" class="form-control" id="title" placeholder="title">
@@ -37,8 +39,65 @@
                 <button type="button" class="btn btn-default" id="CreateData">新增資料</button>
                 <button class="btn btn-default" type="button" id="HideCreateFormButton">取消</button>
             </div>
-         
         </form>
+        <!--明細資料表單-->
+        <form id="DetailForm" hidden>
+            <h2>明細資料表單</h2>
+            <div class="form-group">
+                <label for="titleDetail">title</label>
+                <input type="text" class="form-control" id="titleDetail">
+            </div>
+            <div class="form-group">
+                <label for="authorDetail">author</label>
+                <input type="text" class="form-control" id="authorDetail">
+            </div>
+            <div class="form-group">
+                <label for="phoneDetail">phone</label>
+                <input type="text" class="form-control" id="phoneDetail">
+            </div>
+            <div class="form-group">
+                <label for="mobilephoneDetail">mobilephone</label>
+                <input type="text" class="form-control" id="mobilephoneDetail">
+            </div>
+            <div class="form-group">
+                <label for="addressDetail">address</label>
+                <input type="text" class="form-control" id="addressDetail">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-default" type="button" id="HideDetailFormButton">關閉</button>
+            </div>
+        </form>
+        <!--編輯資料表單-->
+        <form id="EditForm" hidden>
+            <h2>編輯資料表單</h2>
+            <input type="text" class="form-control" id="PostsDataID" hidden>
+            <div class="form-group">
+                <label for="titleEdit">title</label>
+                <input type="text" class="form-control" id="titleEdit">
+            </div>
+            <div class="form-group">
+                <label for="authorEdit">author</label>
+                <input type="text" class="form-control" id="authorEdit">
+            </div>
+            <div class="form-group">
+                <label for="phoneEdit">phone</label>
+                <input type="text" class="form-control" id="phoneEdit">
+            </div>
+            <div class="form-group">
+                <label for="mobilephoneEdit">mobilephone</label>
+                <input type="text" class="form-control" id="mobilephoneEdit">
+            </div>
+            <div class="form-group">
+                <label for="addressEdit">address</label>
+                <input type="text" class="form-control" id="addressEdit">
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-default" id="EditData">編輯資料</button>
+
+                <button class="btn btn-default" type="button" id="HideEditFormButton">關閉</button>
+            </div>
+        </form>
+        <!--Posts表格-->
         <div class="table-responsive">
             <table class="table table-bordered">
                 <thead>
@@ -51,15 +110,12 @@
                         <th>address</th>
                     </tr>
                 </thead>
-                <tbody id="PostsTable">
-
-                </tbody>
+                <tbody id="PostsTable"></tbody>
             </table>
         </div>
     </div>
 </body>
 <script src="js/jquery-3.2.1.min.js"></script>
-
 <script src="js/bootstrap.min.js"></script>
 <script>
     $(function () {
@@ -69,6 +125,12 @@
         })
         $("#HideCreateFormButton").click(function () {
             $("#CreateForm").hide()
+        })
+        $("#HideDetailFormButton").click(function () {
+            $("#DetailForm").hide()
+        })
+        $("#HideEditFormButton").click(function () {
+            $("#EditForm").hide()
         })
         $("#CreateData").click(function () {
             var CreateDataJson = {
@@ -100,8 +162,10 @@
             });
         })
 
+        //當頁面載入完成時，呼叫GetPostsData涵式，將posts資料加入至html的table裡
         GetPostsData();
 
+        //取得Posts資料
         function GetPostsData() {
             $.ajax({
                 //web api網址
@@ -138,18 +202,147 @@
                     })
                     $(".Edit").click(function () {
                         console.log($(this).parents()[1].id)
+                        PutPostsDataByid($(this).parents()[1].id)
+
                     })
                     $(".Delete").click(function () {
                         console.log($(this).parents()[1].id)
+                        DeletePostsDataByid($(this).parents()[1].id)
+
+
                     })
                     $(".Detail").click(function () {
                         console.log($(this).parents()[1].id)
+                        GestPostsDataDetail($(this).parents()[1].id)
                     })
 
                     console.log(result);
                 },
             });
         }
+        //開啟某一筆Posts資料的明細頁面，並禁止使用者修改每一筆欄位的資料
+        function GestPostsDataDetail(id) {
+            $.ajax({
+                //web api網址
+                url: "http://localhost:3000/posts/" + id,
+                //Web Request類型
+                type: 'Get',
+                //回傳內容類型
+                contentType: "application/json; charset=utf-8",
+                //回傳資料型別
+                datatype: 'json',
+                //回傳給web api的資料
+                //data:JSON.stringify(AddData) ,
+                //當ajax發生錯誤會觸發此程式
+                error: function (xhr) {
+                    console.log(xhr);
+                },
+                //當ajax執行成功會觸發此程式
+                success: function (result) {
+                    $("#DetailForm").show()
+                    console.log(result);
+                    $("#titleDetail").attr('disabled', true).val(result.title)
+                    $("#authorDetail").attr('disabled', true).val(result.author)
+                    $("#phoneDetail").attr('disabled', true).val(result.phone)
+                    $("#mobilephoneDetail").attr('disabled', true).val(result.mobilephone)
+                    $("#addressDetail").attr('disabled', true).val(result.address)
+                },
+            });
+        }
+        //刪除某一筆Posts資料
+        function DeletePostsDataByid(id) {
+            var r = confirm("確定刪除此筆資料");
+            if (r == true) {
+                $.ajax({
+                    //web api網址
+                    url: "http://localhost:3000/posts/" + id,
+                    //Web Request類型
+                    type: 'Delete',
+                    //回傳內容類型
+                    contentType: "application/json; charset=utf-8",
+                    //回傳資料型別
+                    datatype: 'json',
+                    //回傳給web api的資料
+                    //data:JSON.stringify(AddData) ,
+                    //當ajax發生錯誤會觸發此程式
+                    error: function (xhr) {
+                        console.log(xhr);
+                    },
+                    //當ajax執行成功會觸發此程式
+                    success: function (result) {
+                        console.log(result)
+
+                        GetPostsData()
+                    },
+                });
+
+            } else {
+                return;
+            }
+        }
+
+        //開啟某一筆Posts資料的明細頁面，並允許使用者修改每一筆欄位的資料
+        function PutPostsDataByid(id) {
+            $.ajax({
+                //web api網址
+                url: "http://localhost:3000/posts/" + id,
+                //Web Request類型
+                type: 'Get',
+                //回傳內容類型
+                contentType: "application/json; charset=utf-8",
+                //回傳資料型別
+                datatype: 'json',
+                //回傳給web api的資料
+                //data:JSON.stringify(AddData) ,
+                //當ajax發生錯誤會觸發此程式
+                error: function (xhr) {
+                    console.log(xhr);
+                },
+                //當ajax執行成功會觸發此程式
+                success: function (result) {
+                    $("#EditForm").show()
+                    console.log(result);
+                    $("#PostsDataID").hide().val(id)
+                    $("#titleEdit").val(result.title)
+                    $("#authorEdit").val(result.author)
+                    $("#phoneEdit").val(result.phone)
+                    $("#mobilephoneEdit").val(result.mobilephone)
+                    $("#addressEdit").val(result.address)
+                },
+            });
+
+        }
+        //更新某一筆Posts資料
+        $("#EditData").click(function () {
+            var EditDataJson = {
+                //id:$("#PostsDataID").val(),
+                title: $("#titleEdit").val(),
+                author: $("#authorEdit").val(),
+                phone: $("#phoneEdit").val(),
+                mobilephone: $("#mobilephoneEdit").val(),
+                address: $("#addressEdit").val(),
+            }
+            $.ajax({
+                //web api網址
+                url: "http://localhost:3000/posts/" + $("#PostsDataID").val(),
+                //Web Request類型
+                type: 'Put',
+                //回傳內容類型
+                contentType: "application/json; charset=utf-8",
+                //回傳資料型別
+                datatype: 'json',
+                //回傳給web api的資料
+                data: JSON.stringify(EditDataJson),
+                //當ajax發生錯誤會觸發此程式
+                error: function (xhr) {
+                    console.log(xhr);
+                },
+                //當ajax執行成功會觸發此程式
+                success: function (result) {
+                    GetPostsData()
+                },
+            });
+        })
     })
 </script>
 
