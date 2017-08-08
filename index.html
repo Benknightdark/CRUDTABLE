@@ -201,19 +201,20 @@
                             "</tr>")
                     })
                     $(".Edit").click(function () {
-                        console.log($(this).parents()[1].id)
-                        PutPostsDataByid($(this).parents()[1].id)
+                       // console.log($(this).parent().parent()[0].id)
+                       // console.log($(this).parents()[1].id)
+                        PutPostsDataByid($(this).parent().parent()[0].id)
 
                     })
                     $(".Delete").click(function () {
-                        console.log($(this).parents()[1].id)
-                        DeletePostsDataByid($(this).parents()[1].id)
+                       // console.log($(this).parents()[1].id)
+                        DeletePostsDataByid($(this).parent().parent()[0].id)
 
 
                     })
                     $(".Detail").click(function () {
-                        console.log($(this).parents()[1].id)
-                        GestPostsDataDetail($(this).parents()[1].id)
+                       // console.log($(this).parents()[1].id)
+                        GestPostsDataDetail($(this).parent().parent()[0].id)
                     })
 
                     console.log(result);
